@@ -1,18 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { ShieldAlert, Heart, Leaf, Save } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
+import { useUserPreferences } from "@/lib/context";
 
 const HealthPreferences = () => {
   const navigate = useNavigate();
@@ -23,46 +18,20 @@ const HealthPreferences = () => {
   const [dietaryPreferences, setDietaryPreferences] = useState<string[]>([]);
 
   const allergenOptions = [
-    "Peanuts",
-    "Tree Nuts",
-    "Milk",
-    "Eggs",
-    "Fish",
-    "Shellfish",
-    "Soy",
-    "Wheat/Gluten",
-    "Sesame",
-    "Sulfites",
+    "Peanuts", "Tree Nuts", "Milk", "Eggs", "Fish", "Shellfish",
+    "Soy", "Wheat/Gluten", "Sesame", "Sulfites"
   ];
 
   const medicalOptions = [
-    "Diabetes",
-    "High Blood Pressure",
-    "Heart Disease",
-    "High Cholesterol",
-    "Kidney Disease",
-    "Liver Disease",
-    "Celiac Disease",
-    "Lactose Intolerance",
-    "Food Allergies",
-    "GERD/Acid Reflux",
+    "Diabetes", "High Blood Pressure", "Heart Disease", "High Cholesterol",
+    "Kidney Disease", "Liver Disease", "Celiac Disease", "Lactose Intolerance",
+    "Food Allergies", "GERD/Acid Reflux"
   ];
 
   const dietaryOptions = [
-    "Vegetarian",
-    "Vegan",
-    "Keto",
-    "Paleo",
-    "Mediterranean",
-    "Low Carb",
-    "Low Fat",
-    "Low Sodium",
-    "High Protein",
-    "Organic Only",
-    "Non-GMO",
-    "Halal",
-    "Kosher",
-    "Raw Food",
+    "Vegetarian", "Vegan", "Keto", "Paleo", "Mediterranean",
+    "Low Carb", "Low Fat", "Low Sodium", "High Protein", "Organic Only",
+    "Non-GMO", "Halal", "Kosher", "Raw Food"
   ];
 
   const handleCheckboxChange = (
@@ -71,27 +40,25 @@ const HealthPreferences = () => {
     setter: React.Dispatch<React.SetStateAction<string[]>>
   ) => {
     if (currentList.includes(value)) {
-      setter(currentList.filter((item) => item !== value));
+      setter(currentList.filter(item => item !== value));
     } else {
       setter([...currentList, value]);
     }
   };
 
+  const { setContextAllergens, setContextDietaryPreferences, setContextMedicalConditions } = useUserPreferences();
+
   const handleSubmit = () => {
-    const preferences = {
-      allergens,
-      medicalConditions,
-      dietaryPreferences,
-    };
-
-    localStorage.setItem("nutripal-preferences", JSON.stringify(preferences));
-
+    setContextAllergens(allergens);
+    setContextDietaryPreferences(dietaryPreferences);
+    setContextMedicalConditions(medicalConditions);
     toast({
       title: "Preferences Saved!",
       description: "Your health preferences have been updated successfully.",
     });
 
-    navigate("/home");
+    // Navigate to chat page
+    navigate("/chat");
   };
 
   const CheckboxSection = ({
@@ -101,7 +68,7 @@ const HealthPreferences = () => {
     options,
     selectedValues,
     onChange,
-    iconColor,
+    iconColor
   }: {
     title: string;
     description: string;
@@ -153,9 +120,7 @@ const HealthPreferences = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              Health Preferences
-            </h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Health Preferences</h1>
             <p className="text-muted-foreground text-lg">
               Help us personalize your nutrition recommendations
             </p>
@@ -170,9 +135,7 @@ const HealthPreferences = () => {
               iconColor="text-destructive"
               options={allergenOptions}
               selectedValues={allergens}
-              onChange={(value) =>
-                handleCheckboxChange(value, allergens, setAllergens)
-              }
+              onChange={(value) => handleCheckboxChange(value, allergens, setAllergens)}
             />
 
             <Separator />
@@ -185,13 +148,7 @@ const HealthPreferences = () => {
               iconColor="text-info"
               options={medicalOptions}
               selectedValues={medicalConditions}
-              onChange={(value) =>
-                handleCheckboxChange(
-                  value,
-                  medicalConditions,
-                  setMedicalConditions
-                )
-              }
+              onChange={(value) => handleCheckboxChange(value, medicalConditions, setMedicalConditions)}
             />
 
             <Separator />
@@ -204,54 +161,32 @@ const HealthPreferences = () => {
               iconColor="text-success"
               options={dietaryOptions}
               selectedValues={dietaryPreferences}
-              onChange={(value) =>
-                handleCheckboxChange(
-                  value,
-                  dietaryPreferences,
-                  setDietaryPreferences
-                )
-              }
+              onChange={(value) => handleCheckboxChange(value, dietaryPreferences, setDietaryPreferences)}
             />
 
             {/* Summary */}
-            {(allergens.length > 0 ||
-              medicalConditions.length > 0 ||
-              dietaryPreferences.length > 0) && (
+            {(allergens.length > 0 || medicalConditions.length > 0 || dietaryPreferences.length > 0) && (
               <Card className="bg-muted/50 border-border/20">
                 <CardHeader>
-                  <CardTitle className="text-lg">
-                    Selected Preferences Summary
-                  </CardTitle>
+                  <CardTitle className="text-lg">Selected Preferences Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {allergens.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-destructive mb-2">
-                        Allergens to Avoid:
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {allergens.join(", ")}
-                      </p>
+                      <h4 className="font-medium text-destructive mb-2">Allergens to Avoid:</h4>
+                      <p className="text-sm text-muted-foreground">{allergens.join(", ")}</p>
                     </div>
                   )}
                   {medicalConditions.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-info mb-2">
-                        Medical Considerations:
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {medicalConditions.join(", ")}
-                      </p>
+                      <h4 className="font-medium text-info mb-2">Medical Considerations:</h4>
+                      <p className="text-sm text-muted-foreground">{medicalConditions.join(", ")}</p>
                     </div>
                   )}
                   {dietaryPreferences.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-success mb-2">
-                        Dietary Preferences:
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {dietaryPreferences.join(", ")}
-                      </p>
+                      <h4 className="font-medium text-success mb-2">Dietary Preferences:</h4>
+                      <p className="text-sm text-muted-foreground">{dietaryPreferences.join(", ")}</p>
                     </div>
                   )}
                 </CardContent>

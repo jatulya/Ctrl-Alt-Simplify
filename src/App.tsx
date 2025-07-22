@@ -9,11 +9,13 @@ import Home from "./pages/Home";
 import HealthPreferences from "./pages/HealthPreferences";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
+import { PreferencesProvider } from "./lib/context";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <PreferencesProvider>
+    <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -29,6 +31,8 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
+  </PreferencesProvider>
+  
 );
 
 export default App;
