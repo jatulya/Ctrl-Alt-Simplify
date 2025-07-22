@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { ShieldAlert, Heart, Leaf, Save } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
+import { useUserPreferences } from "@/lib/context";
 
 const HealthPreferences = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const HealthPreferences = () => {
   const [dietaryPreferences, setDietaryPreferences] = useState<string[]>([]);
 
   const allergenOptions = [
-    "Peanuts", "Tree Nuts", "Milk", "Eggs", "Fish", "Shellfish", 
+    "Peanuts", "Tree Nuts", "Milk", "Eggs", "Fish", "Shellfish",
     "Soy", "Wheat/Gluten", "Sesame", "Sulfites"
   ];
 
@@ -28,14 +29,14 @@ const HealthPreferences = () => {
   ];
 
   const dietaryOptions = [
-    "Vegetarian", "Vegan", "Keto", "Paleo", "Mediterranean", 
+    "Vegetarian", "Vegan", "Keto", "Paleo", "Mediterranean",
     "Low Carb", "Low Fat", "Low Sodium", "High Protein", "Organic Only",
     "Non-GMO", "Halal", "Kosher", "Raw Food"
   ];
 
   const handleCheckboxChange = (
-    value: string, 
-    currentList: string[], 
+    value: string,
+    currentList: string[],
     setter: React.Dispatch<React.SetStateAction<string[]>>
   ) => {
     if (currentList.includes(value)) {
@@ -45,25 +46,29 @@ const HealthPreferences = () => {
     }
   };
 
+  const { setContextAllergens, setContextDietaryPreferences, setContextMedicalConditions } = useUserPreferences();
+
   const handleSubmit = () => {
-    // Here you would typically save to a database
+    setContextAllergens(allergens);
+    setContextDietaryPreferences(dietaryPreferences);
+    setContextMedicalConditions(medicalConditions);
     toast({
       title: "Preferences Saved!",
       description: "Your health preferences have been updated successfully.",
     });
-    
+
     // Navigate to chat page
     navigate("/chat");
   };
 
-  const CheckboxSection = ({ 
-    title, 
-    description, 
-    icon: Icon, 
-    options, 
-    selectedValues, 
+  const CheckboxSection = ({
+    title,
+    description,
+    icon: Icon,
+    options,
+    selectedValues,
     onChange,
-    iconColor 
+    iconColor
   }: {
     title: string;
     description: string;
@@ -110,7 +115,7 @@ const HealthPreferences = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary">
       <Navbar />
-      
+
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -190,7 +195,7 @@ const HealthPreferences = () => {
 
             {/* Submit Button */}
             <div className="text-center">
-              <Button 
+              <Button
                 onClick={handleSubmit}
                 size="lg"
                 className="bg-primary hover:bg-primary-dark px-8"
