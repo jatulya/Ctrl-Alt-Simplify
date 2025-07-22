@@ -46,19 +46,59 @@ const Home = () => {
   //     reader.readAsDataURL(file);
   //   }
   // };
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64Image = reader.result as string;
-        setImagePreview(base64Image);
-        localStorage.setItem("uploadedImage", base64Image);
-        alert("Image uploaded successfully!");
-      };
-      reader.readAsDataURL(file);
+  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       const base64Image = reader.result as string;
+  //       setImagePreview(base64Image);
+  //       localStorage.setItem("uploadedImage", base64Image);
+  //       alert("Image uploaded successfully!");
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64Image = reader.result as string;
+      setImagePreview(base64Image);
+      localStorage.setItem("uploadedImage", base64Image);
+      alert("Image uploaded successfully!");
+    };
+    reader.readAsDataURL(file);
+
+    // 👇 Send POST request to FastAPI
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("allergens", "nuts, soy"); // Replace with user input if needed
+    formData.append("preferences", "vegan");   // Replace with user input if needed
+    formData.append("health_conditions", "diabetes"); // Replace as needed
+
+    try {
+      const res = await fetch("http://localhost:8000/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Analysis failed");
+
+      const data = await res.json();
+      console.log("LLM Response:", data.result);
+
+    localStorage.setItem("nutripal-ocr", JSON.stringify(data.result));
+
+      alert("Analysis completed. Check console for result.");
+    } catch (error) {
+      console.error("Upload failed", error);
+      alert("Upload failed");
     }
-  };
+  }
+};
+
 
   const healthTips = [
     {

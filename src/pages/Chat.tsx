@@ -55,29 +55,34 @@ const Chat = () => {
     medicalConditions: string[];
     dietaryPreferences: string[];
   } | null>(null);
-  const ocrDataRaw = {
-    result:
-      '{"ingredients":["CHOCOCREME (SUGAR, REFINED PALMOLEIN, REFINED PALM OIL, COCOA SOLIDS, EMULSIFIER LECITHIN (FROM SOYABEAN), NATURE IDENTICAL FLAVOURING SUBSTANCES (CHOCOLATE), ARTIFICIAL FLAVOURING SUBSTANCES (VANILLA))", "MAIDA (REFINED WHEAT FLOUR)", "HYDROGENATED VEGETABLE OIL", "SUGAR", "DARK INVERT SYRUP", "LIQUID GLUCOSE", "RAISING AGENTS [INS 503(ii), INS 500(i), INS 450()]", "COCOA SOLIDS", "BUTTER", "MILK SOLIDS", "IODIZED SALT", "NATURE IDENTICAL FLAVOURING SUBSTANCES (\\"MILK CHOCOLATE\\")", "COLOURS (INS 150c, INS 150d)", "EMULSIFIERS [LECITHIN (FROM SOYABEAN), MONO AND DIGLYCERIDES OF FATTY ACIDS (FROM PALM OIL)]", "ARTIFICIAL FLAVOURING SUBSTANCES (MILK, VANILLA)"],"allergens": "yes","healthImplication": "This product is highly unsuitable for individuals with diabetes and fatty liver.","dietaryPreference": "no","score": 1}',
-  };
+  // const ocrDataRaw = {
+  //   result:
+  //     '{"ingredients":["CHOCOCREME (SUGAR, REFINED PALMOLEIN, REFINED PALM OIL, COCOA SOLIDS, EMULSIFIER LECITHIN (FROM SOYABEAN), NATURE IDENTICAL FLAVOURING SUBSTANCES (CHOCOLATE), ARTIFICIAL FLAVOURING SUBSTANCES (VANILLA))", "MAIDA (REFINED WHEAT FLOUR)", "HYDROGENATED VEGETABLE OIL", "SUGAR", "DARK INVERT SYRUP", "LIQUID GLUCOSE", "RAISING AGENTS [INS 503(ii), INS 500(i), INS 450()]", "COCOA SOLIDS", "BUTTER", "MILK SOLIDS", "IODIZED SALT", "NATURE IDENTICAL FLAVOURING SUBSTANCES (\\"MILK CHOCOLATE\\")", "COLOURS (INS 150c, INS 150d)", "EMULSIFIERS [LECITHIN (FROM SOYABEAN), MONO AND DIGLYCERIDES OF FATTY ACIDS (FROM PALM OIL)]", "ARTIFICIAL FLAVOURING SUBSTANCES (MILK, VANILLA)"],"allergens": "yes","healthImplication": "This product is highly unsuitable for individuals with diabetes and fatty liver.","dietaryPreference": "no","score": 1}',
+  // };
+  // const storedOCR = localStorage.getItem("nutripal-ocr");
+ const [parsedResult, setOcrData] = useState<{ ingredients: string[]; score: number | null }>({
+  ingredients: [],
+  score: null,
+});
 
-  useEffect(() => {
-    const saved = localStorage.getItem("nutripal-preferences");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setPreferences(parsed);
-      } catch (e) {
-        console.error("Failed to parse preferences:", e);
-      }
+useEffect(() => {
+  const storedOCR = localStorage.getItem("nutripal-ocr");
+  if (storedOCR) {
+    try {
+      setOcrData(JSON.parse(storedOCR));
+    } catch (err) {
+      console.error("Failed to parse OCR result", err);
     }
-  }, []);
-  let parsedResult;
-  try {
-    parsedResult = JSON.parse(ocrDataRaw.result);
-  } catch (err) {
-    console.error("Failed to parse OCR result", err);
-    parsedResult = { ingredients: [], score: null };
   }
+}, []);
+
+  
+  // try {
+  //   parsedResult = JSON.parse(ocrData);
+  // } catch (err) {
+  //   console.error("Failed to parse OCR result", err);
+  //   parsedResult = { ingredients: [], score: null };
+  // }
 
   const mockAnalysis = (ingredientText: string) => {
     // Mock analysis based on common ingredients

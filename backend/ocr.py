@@ -39,7 +39,7 @@ def extract_ingredients(image_path):
 
     lowered_text = full_text.lower()
 
-   start_patterns = [
+    start_patterns = [
     r"\bingredients?\b",
     r"\bingredients?[-_\s:]?",
     r"\bingredients?list\b",
@@ -49,8 +49,8 @@ def extract_ingredients(image_path):
     r"\bIngredients?[-_\s:]?",
     r"\bIngredients?list\b",
     r"\bIngredients?[\s_]?list\b",
-    r"\bIngre+di+ents?\b",
-]
+    r"\bIngre+di+ents?\b",      
+    ]   
 
     # Search for first matching pattern
     start_idx = -1

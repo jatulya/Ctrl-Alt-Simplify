@@ -1,9 +1,16 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from tempfile import NamedTemporaryFile
+from fastapi.middleware.cors import CORSMiddleware
 import shutil
 from ocr import extract_ingredients,generate_analysis_prompt,ask_llm
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ⚠️ Allow all origins for development only!
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.post("/analyze")
 async def analyze(
     image: UploadFile = File(...),
