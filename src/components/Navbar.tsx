@@ -9,10 +9,12 @@ export const Navbar = () => {
   const navItems = [
     { path: "/home", label: "Home", icon: Home },
     { path: "/health-preferences", label: "Preferences", icon: Settings },
-    { path: "/chat", label: "Chat", icon: MessageCircle }
+    { path: "/chat", label: "Chat", icon: MessageCircle },
   ];
 
   const handleLogout = () => {
+    localStorage.removeItem("uploadedImage");
+
     navigate("/");
   };
 
@@ -33,14 +35,14 @@ export const Navbar = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
-              
+
               return (
                 <button
                   key={item.path}
                   onClick={() => navigate(item.path)}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-                    isActive 
-                      ? "bg-primary text-primary-foreground" 
+                    isActive
+                      ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                 >
@@ -52,9 +54,9 @@ export const Navbar = () => {
           </div>
 
           {/* Logout Button */}
-          <Button 
+          <Button
             onClick={handleLogout}
-            variant="outline" 
+            variant="outline"
             size="sm"
             className="border-border hover:bg-destructive hover:text-destructive-foreground"
           >
@@ -69,14 +71,14 @@ export const Navbar = () => {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
-              
+
               return (
                 <button
                   key={item.path}
                   onClick={() => navigate(item.path)}
                   className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
-                    isActive 
-                      ? "text-primary" 
+                    isActive
+                      ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >

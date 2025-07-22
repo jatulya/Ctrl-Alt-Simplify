@@ -233,22 +233,6 @@ const Chat = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-border/20">
-                <CardHeader>
-                  <CardTitle className="text-lg">Scan or Upload</CardTitle>
-                  <CardDescription>Use camera or upload photo</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button variant="outline" className="w-full">
-                    <Camera className="mr-2 h-4 w-4" />
-                    Scan with Camera
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload Photo
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Chat Area */}
