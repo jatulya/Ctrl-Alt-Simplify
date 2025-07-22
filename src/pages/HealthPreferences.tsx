@@ -52,8 +52,8 @@ const HealthPreferences = () => {
       description: "Your health preferences have been updated successfully.",
     });
     
-    // Navigate to chat page
-    navigate("/chat");
+   
+    navigate("/home");
   };
 
   const CheckboxSection = ({ 
